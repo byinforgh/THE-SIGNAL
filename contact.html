@@ -197,24 +197,22 @@
 
       // Collect form data
       const formData = new FormData(form);
-      const data = {
-        timestamp: new Date().toLocaleString(),
-        fullName: formData.get('fullName'),
-        businessName: formData.get('businessName'),
-        location: formData.get('location'),
-        whatYouSell: formData.get('whatYouSell'),
-        whatsapp: formData.get('whatsapp'),
-        registered: formData.get('registered')
-      };
+      
+      // Create URL-encoded form data (simple request, no preflight needed)
+      const params = new URLSearchParams();
+      params.append('timestamp', new Date().toLocaleString());
+      params.append('fullName', formData.get('fullName'));
+      params.append('businessName', formData.get('businessName'));
+      params.append('location', formData.get('location'));
+      params.append('whatYouSell', formData.get('whatYouSell'));
+      params.append('whatsapp', formData.get('whatsapp'));
+      params.append('registered', formData.get('registered'));
 
       try {
         const response = await fetch(GOOGLE_APPS_SCRIPT_URL, {
           method: 'POST',
           mode: 'no-cors',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify(data)
+          body: params.toString()
         });
 
         // With no-cors mode, we can't read the response, so we assume success after a delay
